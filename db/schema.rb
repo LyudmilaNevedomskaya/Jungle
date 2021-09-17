@@ -16,25 +16,10 @@ ActiveRecord::Schema.define(version: 20210916190050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "books", force: :cascade do |t|
-    t.integer "owner_id"
-    t.integer "price",                 null: false
-    t.string  "author",    limit: 255, null: false
-    t.string  "title",     limit: 255, null: false
-    t.string  "genre",     limit: 255, null: false
-    t.integer "year",      limit: 2,   null: false
-    t.string  "bookcover", limit: 255, null: false
-  end
-
   create_table "categories", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "favorites", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "book_id"
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -71,32 +56,15 @@ ActiveRecord::Schema.define(version: 20210916190050) do
 
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
 
-  create_table "sells", force: :cascade do |t|
-    t.integer "book_id"
-    t.date    "sold_date", null: false
-    t.integer "total",     null: false
-    t.integer "user_id"
-  end
-
-  create_table "stores", force: :cascade do |t|
-    t.integer "owner_id"
-    t.integer "book_id"
-  end
-
   create_table "users", force: :cascade do |t|
-    t.string "name",     limit: 255, null: false
-    t.string "email",    limit: 255, null: false
-    t.string "password", limit: 255, null: false
+    t.string   "name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  add_foreign_key "books", "users", column: "owner_id", name: "books_owner_id_fkey", on_delete: :cascade
-  add_foreign_key "favorites", "books", name: "favorites_book_id_fkey", on_delete: :cascade
-  add_foreign_key "favorites", "users", name: "favorites_user_id_fkey", on_delete: :cascade
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
   add_foreign_key "products", "categories"
-  add_foreign_key "sells", "books", name: "sells_book_id_fkey", on_delete: :cascade
-  add_foreign_key "sells", "users", name: "sells_user_id_fkey", on_delete: :cascade
-  add_foreign_key "stores", "books", name: "stores_book_id_fkey", on_delete: :cascade
-  add_foreign_key "stores", "users", column: "owner_id", name: "stores_owner_id_fkey", on_delete: :cascade
 end
